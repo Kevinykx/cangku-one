@@ -31,17 +31,17 @@ export const mockRecentCampaigns: Campaign[] = [
   {
     id: 'CAM001', name: '618大促活动', type: '电商推广', status: 'running',
     budget: 50000, spend: 8420, ctr: 3.8, cpc: 1.2, impressions: 1200000, clicks: 32450,
-    startDate: '2024-05-01', endDate: '2024-06-18', creator: '张三',
+    startDate: '2024-05-01', endDate: '2024-06-18', creator: '张三', boosted: true,
   },
   {
     id: 'CAM002', name: '新品推广', type: '品牌宣传', status: 'paused',
     budget: 30000, spend: 3260, ctr: 2.1, cpc: 1.8, impressions: 580000, clicks: 10112,
-    startDate: '2024-05-08', endDate: '2024-05-31', creator: '李四',
+    startDate: '2024-05-08', endDate: '2024-05-31', creator: '李四', boosted: false,
   },
   {
     id: 'CAM003', name: '品牌宣传', type: '品牌宣传', status: 'running',
     budget: 20000, spend: 980, ctr: 4.2, cpc: 0.9, impressions: 230000, clicks: 10889,
-    startDate: '2024-05-05', endDate: '2024-05-20', creator: '王五',
+    startDate: '2024-05-05', endDate: '2024-05-20', creator: '王五', boosted: true,
   },
 ];
 
@@ -50,17 +50,17 @@ export const mockAllCampaigns: Campaign[] = [
   {
     id: 'CAM004', name: 'App下载', type: '应用推广', status: 'ended',
     budget: 40000, spend: 38900, ctr: 2.8, cpc: 2.5, impressions: 2100000, clicks: 15560,
-    startDate: '2024-04-01', endDate: '2024-04-30', creator: '赵六',
+    startDate: '2024-04-01', endDate: '2024-04-30', creator: '赵六', boosted: false,
   },
   {
     id: 'CAM005', name: '节日活动测试', type: '电商推广', status: 'running',
     budget: 10000, spend: 0, ctr: 0, cpc: 0, impressions: 0, clicks: 0,
-    startDate: '2026-05-01', endDate: '2026-06-01', creator: '张三',
+    startDate: '2026-05-01', endDate: '2026-06-01', creator: '张三', boosted: false,
   },
   {
     id: 'CAM006', name: '新客拉新计划', type: '应用推广', status: 'paused',
     budget: 20000, spend: 0, ctr: 0, cpc: 0, impressions: 0, clicks: 0,
-    startDate: '2026-05-10', endDate: '2026-05-31', creator: '李四',
+    startDate: '2026-05-10', endDate: '2026-05-31', creator: '李四', boosted: false,
   },
 ];
 

@@ -21,6 +21,7 @@ export interface Campaign {
   startDate: string;
   endDate: string;
   creator: string;
+  boosted?: boolean;
 }
 
 export interface DashboardStat {

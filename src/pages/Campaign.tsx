@@ -10,6 +10,7 @@ import {
   Trash2,
   Download,
   Upload,
+  Zap,
 } from 'lucide-react';
 import * as campaignApi from '../api/campaign';
 import type { Campaign } from '../api/types';
@@ -20,6 +21,8 @@ export function Campaign() {
   const [search, setSearch] = useState('');
   const [filterType, setFilterType] = useState('');
   const [filterStatus, setFilterStatus] = useState('');
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [boostToggling, setBoostToggling] = useState(false);
   const navigate = useNavigate();
 
   function loadCampaigns() {
@@ -55,6 +58,51 @@ export function Campaign() {
       await campaignApi.deleteCampaign(id);
     } catch {
       if (prev) setCampaigns(p => [...p, prev]);
+    }
+  }
+
+  function toggleSelect(id: string) {
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id); else next.add(id);
+      return next;
+    });
+  }
+
+  function toggleSelectAll() {
+    setSelectedIds((prev) =>
+      prev.size === filtered.length && filtered.length > 0
+        ? new Set()
+        : new Set(filtered.map((c) => c.id))
+    );
+  }
+
+  async function handleToggleBoost(campaign: Campaign) {
+    const newBoosted = !campaign.boosted;
+    setCampaigns((prev) =>
+      prev.map((c) => (c.id === campaign.id ? { ...c, boosted: newBoosted } : c))
+    );
+    try {
+      await campaignApi.updateCampaign(campaign.id, { boosted: newBoosted });
+    } catch {
+      loadCampaigns();
+    }
+  }
+
+  async function handleBatchToggleBoost(boosted: boolean) {
+    const ids = Array.from(selectedIds);
+    if (ids.length === 0) return;
+    setBoostToggling(true);
+    setCampaigns((prev) =>
+      prev.map((c) => (ids.includes(c.id) ? { ...c, boosted } : c))
+    );
+    setSelectedIds(new Set());
+    try {
+      await campaignApi.batchToggleBoost(ids, boosted);
+    } catch {
+      loadCampaigns();
+    } finally {
+      setBoostToggling(false);
     }
   }
 
@@ -148,6 +196,38 @@ export function Campaign() {
         </div>
       </div>
 
+      {/* 批量操作栏 */}
+      {selectedIds.size > 0 && (
+        <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 flex items-center justify-between">
+          <span className="text-sm text-blue-700">
+            已选择 <span className="font-semibold">{selectedIds.size}</span> 条广告计划
+          </span>
+          <div className="flex items-center space-x-3">
+            <button
+              onClick={() => handleBatchToggleBoost(true)}
+              disabled={boostToggling}
+              className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 disabled:opacity-50"
+            >
+              <Zap className="mr-1.5 h-4 w-4" />
+              一键起量
+            </button>
+            <button
+              onClick={() => handleBatchToggleBoost(false)}
+              disabled={boostToggling}
+              className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 disabled:opacity-50"
+            >
+              关闭起量
+            </button>
+            <button
+              onClick={() => setSelectedIds(new Set())}
+              className="text-sm text-gray-500 hover:text-gray-700"
+            >
+              取消选择
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* 广告计划列表 */}
       <div className="bg-white shadow rounded-lg overflow-hidden">
         <div className="overflow-x-auto">
@@ -159,6 +239,14 @@ export function Campaign() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
+                  <th className="px-4 py-3 text-left">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.size === filtered.length && filtered.length > 0}
+                      onChange={toggleSelectAll}
+                      className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                    />
+                  </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">计划名称</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">类型</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
@@ -167,12 +255,21 @@ export function Campaign() {
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">点击率</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">展示量</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">创建人</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">起量</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">操作</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filtered.map((campaign) => (
                   <tr key={campaign.id} className="hover:bg-gray-50">
+                    <td className="px-4 py-4 whitespace-nowrap">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.has(campaign.id)}
+                        onChange={() => toggleSelect(campaign.id)}
+                        className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                      />
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">{campaign.name}</div>
                       <div className="text-sm text-gray-500">{campaign.id}</div>
@@ -209,6 +306,18 @@ export function Campaign() {
                         : campaign.impressions.toLocaleString()}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{campaign.creator}</td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <button
+                        onClick={() => handleToggleBoost(campaign)}
+                        className={`relative inline-flex h-5 w-9 flex-shrink-0 rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
+                          campaign.boosted ? 'bg-blue-600' : 'bg-gray-200'
+                        }`}
+                      >
+                        <span className={`inline-block h-4 w-4 transform rounded-full bg-white shadow transition duration-200 ease-in-out ${
+                          campaign.boosted ? 'translate-x-4' : 'translate-x-0'
+                        }`} />
+                      </button>
+                    </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium space-x-2">
                       <button
                         onClick={() => navigate(`/campaign/${campaign.id}/edit`)}

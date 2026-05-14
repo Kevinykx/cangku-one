@@ -42,6 +42,13 @@ export async function batchDeleteCampaigns(ids: string[]) {
   return mockResponse({ deletedCount: ids.length });
 }
 
+export async function batchToggleBoost(ids: string[], boosted: boolean) {
+  campaigns = campaigns.map((c) =>
+    ids.includes(c.id) ? { ...c, boosted } : c
+  );
+  return mockResponse({ updatedCount: ids.length });
+}
+
 export interface CleanupSchedule {
   enabled: boolean;
   intervalHours: number;

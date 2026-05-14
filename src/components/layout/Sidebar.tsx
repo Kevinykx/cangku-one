@@ -42,7 +42,6 @@ export function Sidebar({ currentPage = 'dashboard' }: SidebarProps) {
             { name: '计划清理', href: '/campaign-cleanup', icon: Trash2, current: currentPage === '/campaign-cleanup' },
           ],
         },
-        { type: 'link' as const, name: '数据分析', href: '/analytics', icon: TrendingUp, current: currentPage === '/analytics' },
         {
           type: 'group' as const, name: '创意中心', icon: Sparkles,
           current: currentPage.startsWith('/creative'),
@@ -51,6 +50,7 @@ export function Sidebar({ currentPage = 'dashboard' }: SidebarProps) {
             { name: '爆款素材', href: '/creative/trending', icon: TrendingUp, current: currentPage === '/creative/trending' },
           ],
         },
+        { type: 'link' as const, name: '数据分析', href: '/analytics', icon: TrendingUp, current: currentPage === '/analytics' },
       ],
     },
     {
@@ -62,12 +62,12 @@ export function Sidebar({ currentPage = 'dashboard' }: SidebarProps) {
   ];
 
   return (
-    <aside className="w-64 bg-white h-screen border-r border-gray-200 flex-shrink-0">
+    <aside className="w-64 bg-slate-900 h-screen border-r border-slate-800 flex-shrink-0">
       <div className="p-6">
         <div className="space-y-6">
           {menuGroups.map((group) => (
             <div key={group.group}>
-              <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+              <h3 className="px-3 text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">
                 {group.group}
               </h3>
               <nav className="space-y-1">
@@ -79,8 +79,8 @@ export function Sidebar({ currentPage = 'dashboard' }: SidebarProps) {
                         to={item.href}
                         className={`flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                           item.current
-                            ? 'bg-blue-50 text-blue-700 border-r-2 border-blue-600'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            ? 'bg-cyan-500/10 text-cyan-400 border-r-2 border-cyan-500'
+                            : 'text-slate-300 hover:bg-slate-800 hover:text-white'
                         }`}
                       >
                         <item.icon className="mr-3 h-5 w-5" />
@@ -94,28 +94,28 @@ export function Sidebar({ currentPage = 'dashboard' }: SidebarProps) {
                         onClick={() => toggleSection(item.name)}
                         className={`flex items-center justify-between w-full px-3 py-2 text-sm font-medium rounded-md transition-colors ${
                           item.current
-                            ? 'bg-blue-50 text-blue-700'
-                            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            ? 'bg-cyan-500/10 text-cyan-400'
+                            : 'text-slate-300 hover:bg-slate-800 hover:text-white'
                         }`}
                       >
                         <div className="flex items-center">
                           <item.icon className="mr-3 h-5 w-5" />
                           {item.name}
                         </div>
-                        <ChevronDown className={`h-4 w-4 transition-transform ${
+                        <ChevronDown className={`h-4 w-4 text-slate-500 transition-transform ${
                           expandedSections[item.name] ? 'rotate-0' : '-rotate-90'
                         }`} />
                       </button>
                       {expandedSections[item.name] && (
-                        <div className="ml-6 mt-1 space-y-1 border-l border-gray-200">
+                        <div className="ml-6 mt-1 space-y-1 border-l border-slate-700">
                           {item.children.map((child) => (
                             <Link
                               key={child.name}
                               to={child.href}
                               className={`flex items-center pl-3 py-2 text-sm font-medium rounded-md transition-colors ${
                                 child.current
-                                  ? 'text-blue-700 bg-blue-50 border-l-2 border-blue-600 -ml-px'
-                                  : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                  ? 'text-cyan-400 bg-cyan-500/10 border-l-2 border-cyan-500 -ml-px'
+                                  : 'text-slate-300 hover:text-white hover:bg-slate-800'
                               }`}
                             >
                               <child.icon className="mr-3 h-4 w-4" />
