@@ -4,10 +4,12 @@ import {
   Megaphone,
   TrendingUp,
   DollarSign,
-  Users,
   Play,
   Pause,
   Plus,
+  Bot,
+  Trash2,
+  Sparkles,
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import * as dashboardApi from '../api/dashboard';
@@ -18,10 +20,10 @@ const iconMap: Record<string, React.ComponentType<{ className?: string }>> = {
 };
 
 const quickActions = [
-  { name: '创建广告计划', icon: Plus, href: '/campaign/new', color: 'bg-blue-600' },
-  { name: '数据分析', icon: BarChart3, href: '/analytics', color: 'bg-green-600' },
-  { name: '创意中心', icon: Play, href: '/creative', color: 'bg-purple-600' },
-  { name: '团队管理', icon: Users, href: '/team', color: 'bg-orange-600' },
+  { name: 'AI盯盘', icon: Bot, href: '/ai-monitor', color: 'bg-blue-600' },
+  { name: '计划清理', icon: Trash2, href: '/campaign-cleanup', color: 'bg-red-500' },
+  { name: '爆款素材', icon: Sparkles, href: '/creative/trending', color: 'bg-pink-500' },
+  { name: '创建广告计划', icon: Plus, href: '/campaign/new', color: 'bg-green-600' },
 ];
 
 export function Dashboard() {

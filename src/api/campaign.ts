@@ -36,3 +36,57 @@ export async function deleteCampaign(id: string) {
   campaigns = campaigns.filter((c) => c.id !== id);
   return mockResponse(null);
 }
+
+export async function batchDeleteCampaigns(ids: string[]) {
+  campaigns = campaigns.filter((c) => !ids.includes(c.id));
+  return mockResponse({ deletedCount: ids.length });
+}
+
+export interface CleanupSchedule {
+  enabled: boolean;
+  intervalHours: number;
+  conditions: {
+    nameKeyword?: string;
+    dateFrom?: string;
+    dateTo?: string;
+    status?: string;
+    noSpendHours?: number;
+  };
+  lastRun?: string;
+  nextRun?: string;
+}
+
+let cleanupSchedule: CleanupSchedule | null = null;
+
+export async function getCleanupSchedule() {
+  return mockResponse<CleanupSchedule | null>(cleanupSchedule);
+}
+
+export async function saveCleanupSchedule(schedule: CleanupSchedule) {
+  cleanupSchedule = schedule;
+  return mockResponse(schedule);
+}
+
+export async function deleteCampaignsByConditions(conditions: {
+  nameKeyword?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  status?: string;
+  noSpendHours?: number;
+}) {
+  const matched = campaigns.filter((c) => {
+    if (conditions.nameKeyword && !c.name.includes(conditions.nameKeyword)) return false;
+    if (conditions.dateFrom && c.startDate < conditions.dateFrom) return false;
+    if (conditions.dateTo && c.startDate > conditions.dateTo) return false;
+    if (conditions.status && conditions.status !== 'all') {
+      if (c.status !== conditions.status) return false;
+    }
+    if (conditions.noSpendHours && conditions.noSpendHours > 0) {
+      if (c.spend > 0) return false;
+    }
+    return true;
+  });
+  const ids = matched.map((c) => c.id);
+  campaigns = campaigns.filter((c) => !ids.includes(c.id));
+  return mockResponse({ deletedCount: ids.length, campaigns: matched });
+}

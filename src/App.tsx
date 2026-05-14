@@ -7,9 +7,12 @@ import { Campaign } from './pages/Campaign';
 import { CampaignForm } from './pages/CampaignForm';
 import { Analytics } from './pages/Analytics';
 import { AIMonitor } from './pages/AIMonitor';
+import { CampaignCleanup } from './pages/CampaignCleanup';
+import { TrendingMaterial } from './pages/TrendingMaterial';
 import { Creative } from './pages/Creative';
 import { Team } from './pages/Team';
 import { Profile } from './pages/Profile';
+import { SettingsPage } from './pages/Settings';
 import { Login } from './pages/Login';
 
 function App() {
@@ -60,6 +63,13 @@ function App() {
               </Layout>
             </ProtectedRoute>
           } />
+          <Route path="/campaign-cleanup" element={
+            <ProtectedRoute>
+              <Layout currentPage="/campaign-cleanup">
+                <CampaignCleanup />
+              </Layout>
+            </ProtectedRoute>
+          } />
           <Route path="/creative" element={
             <ProtectedRoute>
               <Layout currentPage="/creative">
@@ -67,10 +77,24 @@ function App() {
               </Layout>
             </ProtectedRoute>
           } />
+          <Route path="/creative/trending" element={
+            <ProtectedRoute>
+              <Layout currentPage="/creative/trending">
+                <TrendingMaterial />
+              </Layout>
+            </ProtectedRoute>
+          } />
           <Route path="/team" element={
             <ProtectedRoute>
               <Layout currentPage="/team">
                 <Team />
+              </Layout>
+            </ProtectedRoute>
+          } />
+          <Route path="/settings" element={
+            <ProtectedRoute>
+              <Layout>
+                <SettingsPage />
               </Layout>
             </ProtectedRoute>
           } />

@@ -63,6 +63,18 @@ export interface CreativeAsset {
   previewUrl?: string;
 }
 
+export interface TrendingVideo {
+  id: string;
+  url: string;
+  title: string;
+  coverUrl?: string;
+  likes: number;
+  comments: number;
+  favorites: number;
+  shares: number;
+  createdAt: string;
+}
+
 export interface TrendDataPoint {
   date: string;
   spend: number;

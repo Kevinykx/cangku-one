@@ -2,14 +2,14 @@ import { Link } from 'react-router-dom';
 import {
   BarChart3,
   Megaphone,
-  Settings,
-  FolderOpen,
   Users,
   TrendingUp,
-  FileText,
   Bot,
-  UserCircle,
   ChevronDown,
+  Trash2,
+  Rocket,
+  Sparkles,
+  Image,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -20,6 +20,7 @@ interface SidebarProps {
 export function Sidebar({ currentPage = 'dashboard' }: SidebarProps) {
   const [expandedSections, setExpandedSections] = useState<Record<string, boolean>>({
     '投放工具': true,
+    '创意中心': true,
     '团队管理': true,
   });
 
@@ -31,32 +32,31 @@ export function Sidebar({ currentPage = 'dashboard' }: SidebarProps) {
     {
       group: '主要功能',
       items: [
-        { type: 'link' as const, name: '仪表板', href: '/', icon: BarChart3, current: currentPage === '/' },
+        { type: 'link' as const, name: '首页', href: '/', icon: BarChart3, current: currentPage === '/' },
         {
-          type: 'group' as const, name: '投放工具', icon: Megaphone,
-          current: currentPage.startsWith('/campaign') || currentPage === '/ai-monitor',
+          type: 'group' as const, name: '投放工具', icon: Rocket,
+          current: currentPage.startsWith('/campaign') || currentPage === '/ai-monitor' || currentPage === '/campaign-cleanup',
           children: [
-            { name: '广告计划', href: '/campaign', icon: Megaphone, current: currentPage.startsWith('/campaign') },
+            { name: '广告计划', href: '/campaign', icon: Megaphone, current: currentPage === '/campaign' || currentPage.startsWith('/campaign/') },
             { name: 'AI 盯盘', href: '/ai-monitor', icon: Bot, current: currentPage === '/ai-monitor' },
+            { name: '计划清理', href: '/campaign-cleanup', icon: Trash2, current: currentPage === '/campaign-cleanup' },
           ],
         },
         { type: 'link' as const, name: '数据分析', href: '/analytics', icon: TrendingUp, current: currentPage === '/analytics' },
-        { type: 'link' as const, name: '创意中心', href: '/creative', icon: Megaphone, current: currentPage === '/creative' },
+        {
+          type: 'group' as const, name: '创意中心', icon: Sparkles,
+          current: currentPage.startsWith('/creative'),
+          children: [
+            { name: '素材管理', href: '/creative', icon: Image, current: currentPage === '/creative' },
+            { name: '爆款素材', href: '/creative/trending', icon: TrendingUp, current: currentPage === '/creative/trending' },
+          ],
+        },
       ],
     },
     {
       group: '管理',
       items: [
-        { type: 'link' as const, name: '项目', href: '/projects', icon: FolderOpen, current: currentPage === '/projects' },
-        {
-          type: 'group' as const, name: '团队管理', icon: Users,
-          current: currentPage === '/team',
-          children: [
-            { name: '人员管理', href: '/team', icon: UserCircle, current: currentPage === '/team' },
-          ],
-        },
-        { type: 'link' as const, name: '文档', href: '/docs', icon: FileText, current: currentPage === '/docs' },
-        { type: 'link' as const, name: '设置', href: '/settings', icon: Settings, current: currentPage === '/settings' },
+        { type: 'link' as const, name: '团队管理', href: '/team', icon: Users, current: currentPage === '/team' },
       ],
     },
   ];

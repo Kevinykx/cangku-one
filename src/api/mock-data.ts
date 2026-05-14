@@ -52,6 +52,16 @@ export const mockAllCampaigns: Campaign[] = [
     budget: 40000, spend: 38900, ctr: 2.8, cpc: 2.5, impressions: 2100000, clicks: 15560,
     startDate: '2024-04-01', endDate: '2024-04-30', creator: '赵六',
   },
+  {
+    id: 'CAM005', name: '节日活动测试', type: '电商推广', status: 'running',
+    budget: 10000, spend: 0, ctr: 0, cpc: 0, impressions: 0, clicks: 0,
+    startDate: '2026-05-01', endDate: '2026-06-01', creator: '张三',
+  },
+  {
+    id: 'CAM006', name: '新客拉新计划', type: '应用推广', status: 'paused',
+    budget: 20000, spend: 0, ctr: 0, cpc: 0, impressions: 0, clicks: 0,
+    startDate: '2026-05-10', endDate: '2026-05-31', creator: '李四',
+  },
 ];
 
 export const mockAnalyticsMetrics: AnalyticsMetric[] = [
