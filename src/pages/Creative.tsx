@@ -14,6 +14,8 @@ import {
 } from 'lucide-react';
 import * as creativeApi from '../api/creative';
 import type { CreativeAsset } from '../api/types';
+import { BatchUploadModal } from '../components/creative/BatchUploadModal';
+import type { FileItem } from '../components/creative/BatchUploadModal';
 
 const categories = [
   { value: 'all', label: '全部类型' },
@@ -32,6 +34,7 @@ export function Creative() {
   const [loading, setLoading] = useState(true);
   const [currentView, setCurrentView] = useState('grid');
   const [filterCategory, setFilterCategory] = useState('all');
+  const [showUploadModal, setShowUploadModal] = useState(false);
 
   function loadAssets() {
     setLoading(true);
@@ -48,6 +51,19 @@ export function Creative() {
   async function handleDelete(id: string) {
     if (!confirm('确定要删除这个素材吗？')) return;
     await creativeApi.deleteCreativeAsset(id);
+    loadAssets();
+  }
+
+  async function handleBatchUpload(files: FileItem[]) {
+    const items = files.map((f) => ({
+      name: f.name.replace(/\.[^/.]+$/, ''),
+      type: f.type,
+      format: f.format,
+      fileSize: f.fileSize,
+      dimensions: f.dimensions,
+      uploadTime: f.uploadTime,
+    }));
+    await creativeApi.batchUploadCreativeAssets(items);
     loadAssets();
   }
 
@@ -81,7 +97,10 @@ export function Creative() {
           <p className="mt-1 text-sm text-gray-600">管理您的广告创意和素材</p>
         </div>
         <div className="flex items-center space-x-3">
-          <button className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50">
+          <button
+            onClick={() => setShowUploadModal(true)}
+            className="inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50"
+          >
             <Upload className="mr-2 h-4 w-4" />
             批量上传
           </button>
@@ -163,7 +182,8 @@ export function Creative() {
                       <h4 className="text-sm font-medium text-gray-900 truncate">{asset.name}</h4>
                       <p className="text-xs text-gray-500 mt-1">{asset.category} • {asset.size}</p>
                       <p className="text-xs text-gray-400 mt-1">{asset.format} • {asset.sizeValue}MB</p>
-                      <div className="mt-3 flex items-center justify-between">
+                      <p className="text-xs text-gray-400 mt-1">{asset.createdAt}</p>
+                      <div className="mt-2 flex items-center justify-between">
                         <span className="text-xs text-gray-500">{asset.usedIn.length}个使用</span>
                         <div className="flex space-x-1">
                           <button className="p-1 text-gray-400 hover:text-gray-600"><Eye className="h-4 w-4" /></button>
@@ -184,7 +204,9 @@ export function Creative() {
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">名称</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">类型</th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">大小</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">尺寸</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">文件大小</th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">上传时间</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">使用情况</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">状态</th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">创建人</th>
@@ -203,6 +225,8 @@ export function Creative() {
                       <div className="text-sm text-gray-500">{asset.format}</div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{asset.size}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{asset.sizeValue}MB</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">{asset.createdAt}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">{asset.usedIn.length}个计划</td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
@@ -226,6 +250,12 @@ export function Creative() {
           </div>
         )}
       </div>
+
+      <BatchUploadModal
+        isOpen={showUploadModal}
+        onClose={() => setShowUploadModal(false)}
+        onUpload={handleBatchUpload}
+      />
     </div>
   );
 }
