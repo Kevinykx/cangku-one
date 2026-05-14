@@ -20,6 +20,7 @@ export interface UploadRequest {
   fileSize: number;
   dimensions: string;
   uploadTime: string;
+  previewUrl?: string;
 }
 
 export async function batchUploadCreativeAssets(items: UploadRequest[]) {
@@ -35,6 +36,7 @@ export async function batchUploadCreativeAssets(items: UploadRequest[]) {
     status: 'active' as const,
     createdAt: item.uploadTime,
     creator: '当前用户',
+    previewUrl: item.previewUrl,
   }));
   assets = [...newAssets, ...assets];
   return mockResponse<CreativeAsset[]>(newAssets);

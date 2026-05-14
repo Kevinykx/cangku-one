@@ -60,6 +60,7 @@ export interface CreativeAsset {
   status: 'active' | 'draft' | 'archived';
   createdAt: string;
   creator: string;
+  previewUrl?: string;
 }
 
 export interface TrendDataPoint {
@@ -131,7 +132,7 @@ export interface AIMonitorLog {
 }
 
 export interface LoginCredentials {
-  email: string;
+  account: string;
   password: string;
 }
 

@@ -62,6 +62,7 @@ export function Creative() {
       fileSize: f.fileSize,
       dimensions: f.dimensions,
       uploadTime: f.uploadTime,
+      previewUrl: f.previewUrl,
     }));
     await creativeApi.batchUploadCreativeAssets(items);
     loadAssets();
@@ -167,7 +168,15 @@ export function Creative() {
                 return (
                   <div key={asset.id} className="border border-gray-200 rounded-lg overflow-hidden hover:shadow-md transition-all">
                     <div className="aspect-square bg-gray-100 relative flex items-center justify-center">
-                      <Icon className="w-12 h-12 text-gray-400" />
+                      {asset.previewUrl ? (
+                        asset.type === 'image' ? (
+                          <img src={asset.previewUrl} alt={asset.name} className="w-full h-full object-contain" />
+                        ) : (
+                          <video src={asset.previewUrl} controls className="w-full h-full object-contain" />
+                        )
+                      ) : (
+                        <Icon className="w-12 h-12 text-gray-400" />
+                      )}
                       <div className="absolute top-2 right-2">
                         <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
                           asset.status === 'active' ? 'bg-green-100 text-green-800'

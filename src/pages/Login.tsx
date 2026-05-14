@@ -4,7 +4,7 @@ import { BarChart3 } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 
 export function Login() {
-  const [email, setEmail] = useState('');
+  const [account, setAccount] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const { login, isLoggingIn } = useAuth();
@@ -16,7 +16,7 @@ export function Login() {
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
     setError('');
-    const err = await login({ email, password });
+    const err = await login({ account, password });
     if (err) {
       setError(err);
     } else {
@@ -43,17 +43,17 @@ export function Login() {
           )}
 
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-              邮箱
+            <label htmlFor="account" className="block text-sm font-medium text-gray-700 mb-1">
+              账号
             </label>
             <input
-              id="email"
-              type="email"
+              id="account"
+              type="text"
               required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={account}
+              onChange={(e) => setAccount(e.target.value)}
               className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-              placeholder="admin@example.com"
+              placeholder="ykx123"
             />
           </div>
 
@@ -81,7 +81,7 @@ export function Login() {
           </button>
 
           <p className="text-xs text-gray-400 text-center">
-            测试账号: admin@example.com / admin123
+            测试账号: ykx123 / aa123456
           </p>
         </form>
       </div>

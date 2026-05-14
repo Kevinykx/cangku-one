@@ -5,7 +5,7 @@ import type { User, LoginCredentials } from './types';
 let currentUser: User | null = null;
 
 export async function login(credentials: LoginCredentials) {
-  if (credentials.email === 'admin@example.com' && credentials.password === 'admin123') {
+  if (credentials.account === 'ykx123' && credentials.password === 'aa123456') {
     currentUser = mockUser;
     return mockResponse({ user: mockUser, token: 'mock-token-123' });
   }
