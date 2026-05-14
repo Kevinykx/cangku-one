@@ -1,4 +1,4 @@
-import { BarChart3, Megaphone, Settings, User } from 'lucide-react';
+import { BarChart3, Settings, User } from 'lucide-react';
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -12,13 +12,6 @@ interface HeaderProps {
 export function Header({ user }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const navigation = [
-    { name: '仪表板', href: '/', icon: BarChart3 },
-    { name: '投放工具', href: '/campaign', icon: Megaphone },
-    { name: '数据分析', href: '/analytics', icon: BarChart3 },
-    { name: '创意中心', href: '/creative', icon: Settings },
-  ];
-
   return (
     <header className="bg-white border-b border-gray-200 px-6 py-4">
       <div className="flex items-center justify-between">
@@ -31,18 +24,6 @@ export function Header({ user }: HeaderProps) {
             <span className="ml-2 text-xl font-semibold text-gray-900">巨量助手</span>
           </div>
 
-          {/* Navigation */}
-          <nav className="hidden md:flex space-x-8">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                to={item.href}
-                className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-              >
-                {item.name}
-              </Link>
-            ))}
-          </nav>
         </div>
 
         {/* User Menu */}
@@ -82,20 +63,6 @@ export function Header({ user }: HeaderProps) {
         </div>
       </div>
 
-      {/* Mobile menu */}
-      <div className="md:hidden mt-4">
-        <div className="flex space-x-4">
-          {navigation.map((item) => (
-            <Link
-              key={item.name}
-              to={item.href}
-              className="text-gray-600 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium"
-            >
-              {item.name}
-            </Link>
-          ))}
-        </div>
-      </div>
     </header>
   );
 }
